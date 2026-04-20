@@ -21,7 +21,13 @@ export class AuthService {
     console.log('SMS to', phone, 'OTP:', code);
   }
   verifyOtp(phone: string, code: string) {
-    
-    return { success: true };
+    const data = this.otps.get(phone);
+    if (!data) return { success: false, message: 'OTP not found' };
+    if (data.expires < Date.now())
+      return { success: false, message: 'OTP expired' };
+    if (data.code !== code) return { success: false, message: 'Invalid code' };
+    // TODO: database -> create or update user
+    // TODO: jwt
+    return { success: true, token: 'jwt' };
   }
 }
