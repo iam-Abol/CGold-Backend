@@ -20,4 +20,8 @@ export class AuthService {
     // TODO: sms api from sms.ir
     console.log('SMS to', phone, 'OTP:', code);
   }
+  verifyOtp(phone: string, code: string) {
+    
+    return { success: true };
+  }
 }
