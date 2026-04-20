@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { randomInt } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -13,8 +14,10 @@ export class AuthService {
     return { success: true };
   }
 
-  generateOtp() {
-    return Math.floor(100000 + Math.random() * 900000).toString();
+  generateOtp(length = 6): string {
+    const min = Math.pow(10, length - 1);
+    const max = Math.pow(10, length) - 1;
+    return randomInt(min, max).toString();
   }
   async sendSms(phone: string, code: string) {
     // TODO: sms api from sms.ir
