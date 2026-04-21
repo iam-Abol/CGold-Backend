@@ -1,9 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 import { randomInt } from 'crypto';
+import { User } from 'src/entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   otps = new Map();
+  constructor(
+    @InjectRepository(User)
+    private userRepo: Repository<User>,
+    private jwt: JwtService,
+  ) {}
   async sendOtp(phone: string) {
     const code = this.generateOtp();
     this.otps.set(phone, {
@@ -32,5 +41,12 @@ export class AuthService {
     // TODO: database -> create or update user
     // TODO: jwt
     return { success: true, token: 'jwt' };
+  }
+
+  generateAccess(user: User) {
+    return this.jwt.signAsync(
+      { sub: user.id, phone: user.phone },
+      { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '15m' },
+    );
   }
 }
