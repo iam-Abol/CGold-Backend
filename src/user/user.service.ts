@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -20,5 +20,9 @@ export class UserService {
 
   async save(user: User) {
     return this.repo.save(user);
+  }
+
+  async findOne(options: FindOneOptions<User>) {
+    return this.repo.findOne(options);
   }
 }
