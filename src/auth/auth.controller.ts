@@ -1,13 +1,14 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { VerifyOtpDto } from './dtos/verifyOtp.dto';
-import { sendOtpDto } from './dtos/sendOtp.dto';
+import { SendOtpDto } from './dtos/sendOtp.dto';
+import { RefreshTokenDto } from './dtos/refresh.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('/send-otp')
-  sendOtp(@Body() { phone }: sendOtpDto) {
+  sendOtp(@Body() { phone }: SendOtpDto) {
     console.log(phone);
     return this.authService.sendOtp(phone);
   }
@@ -16,5 +17,9 @@ export class AuthController {
     const { phone, code } = body;
     // console.log('fher');
     return this.authService.verifyOtp(phone, code);
+  }
+  @Post('refresh')
+  refresh(@Body() { token, userId }: RefreshTokenDto) {
+    return this.authService.refresh(userId, token);
   }
 }

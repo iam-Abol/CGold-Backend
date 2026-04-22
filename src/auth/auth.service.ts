@@ -1,8 +1,4 @@
-import {
-  ConsoleLogger,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomInt } from 'crypto';
@@ -43,13 +39,13 @@ export class AuthService {
     if (data.expireAt < Date.now())
       return { success: false, message: 'OTP expired' };
     if (data.code !== code) return { success: false, message: 'Invalid code' };
-    console.log(this.userService, ' fdska;fdsl;k');
+
     let user = await this.userService.findByPhone(phone);
     if (!user) {
       user = await this.userService.create(phone);
     }
     const tokens = await this.generateTokens(user);
-
+    console.log(user);
     return { success: true, tokens };
   }
 
