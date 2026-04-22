@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomInt } from 'crypto';
 import { User } from 'src/entities/user.entity';
+import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -10,13 +11,17 @@ export class AuthService {
   otps = new Map();
   constructor(
     @InjectRepository(User)
-    private userRepo: Repository<User>,
+    private userService: UserService,
     private jwt: JwtService,
   ) {}
   async sendOtp(phone: string) {
-    const code = this.generateOtp();
+    let user = await this.userService.findByPhone(phone);
+    if (!user) {
+      user = await this.userService.create(phone);
+    }
+    const otp = this.generateOtp();
     this.otps.set(phone, {
-      code,
+      otp,
       expireAt: Date.now() + 1000 * 2 * 60, //2m
     });
     await this.sendSms(phone, code);
