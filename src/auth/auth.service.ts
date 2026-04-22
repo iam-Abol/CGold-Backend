@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { randomInt } from 'crypto';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -15,13 +15,9 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
   async sendOtp(phone: string) {
-    let user = await this.userService.findByPhone(phone);
-    if (!user) {
-      user = await this.userService.create(phone);
-    }
-    const otp = this.generateOtp();
+    const code = this.generateOtp();
     this.otps.set(phone, {
-      otp,
+      code,
       expireAt: Date.now() + 1000 * 2 * 60, //2m
     });
     await this.sendSms(phone, code);
@@ -37,21 +33,39 @@ export class AuthService {
     // TODO: sms api from sms.ir
     console.log('SMS to', phone, 'OTP:', code);
   }
-  verifyOtp(phone: string, code: string) {
+  async verifyOtp(phone: string, code: string) {
     const data = this.otps.get(phone);
     if (!data) return { success: false, message: 'OTP not found' };
     if (data.expires < Date.now())
       return { success: false, message: 'OTP expired' };
     if (data.code !== code) return { success: false, message: 'Invalid code' };
     // TODO: database -> create or update user
+    let user = await this.userService.findByPhone(phone);
+    if (!user) {
+      user = await this.userService.create(phone);
+    }
     // TODO: jwt
     return { success: true, token: 'jwt' };
   }
 
-  generateAccess(user: User) {
-    return this.jwt.signAsync(
-      { sub: user.id, phone: user.phone },
-      { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '15m' },
-    );
+  async generateTokens(user: User) {
+    const payload = { sub: user.id, phone: user.phone };
+
+    const accessToken = await this.jwt.signAsync(payload, {
+      expiresIn: '15m',
+    });
+
+    const refreshToken = await this.jwt.signAsync(payload, {
+      expiresIn: '12h',
+    });
+
+    user.refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+
+    await this.userService.save(user);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }
