@@ -9,7 +9,6 @@ export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('/send-otp')
   sendOtp(@Body() { phone }: SendOtpDto) {
-    console.log(phone);
     return this.authService.sendOtp(phone);
   }
   @Post('/verify-otp')

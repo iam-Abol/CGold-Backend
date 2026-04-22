@@ -5,6 +5,7 @@ import { randomInt } from 'crypto';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -30,11 +31,26 @@ export class AuthService {
   }
   async sendSms(phone: string, code: string) {
     // TODO: sms api from sms.ir
+    console.log(phone, code, 'fsafd sfda');
+    const apiKey = process.env.API_KEY;
+    const patternId = process.env.PATTERN_ID;
+    const response = await axios.post(
+      'https://api.sms.ir/v1/send/verify',
+      {
+        mobile: phone,
+        templateId: patternId,
+        parameters: [{ name: 'code', value: code }],
+      },
+      {
+        headers: { 'x-api-key': apiKey },
+      },
+    );
+    console.log(response.data);
     console.log('SMS to', phone, 'OTP:', code);
   }
   async verifyOtp(phone: string, code: string) {
     const data = this.otps.get(phone);
-    console.log('data: ', data);
+    // console.log('data: ', data);
     if (!data) return { success: false, message: 'OTP not found' };
     if (data.expireAt < Date.now())
       return { success: false, message: 'OTP expired' };
@@ -45,7 +61,7 @@ export class AuthService {
       user = await this.userService.create(phone);
     }
     const tokens = await this.generateTokens(user);
-    console.log(user);
+    // console.log(user);
     return { success: true, tokens };
   }
 
