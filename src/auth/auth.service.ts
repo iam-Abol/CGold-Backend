@@ -69,10 +69,12 @@ export class AuthService {
     const payload = { sub: user.id, phone: user.phone, role: user.role };
 
     const accessToken = await this.jwt.signAsync(payload, {
+      secret: process.env.JWT_ACCESS_SECRET,
       expiresIn: '15m',
     });
 
     const refreshToken = await this.jwt.signAsync(payload, {
+      secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: '12h',
     });
 
