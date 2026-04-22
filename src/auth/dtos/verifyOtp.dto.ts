@@ -1,13 +1,10 @@
-import { IsNotEmpty, IsString, Length, Matches } from 'class-validator';
+import { IsString, Length, IsPhoneNumber } from 'class-validator';
 
 export class VerifyOtpDto {
-  @IsNotEmpty()
-  @IsString()
-  @Matches(/^(\+98|0)?9\d{9}$/, { message: 'شماره تلفن معتبر نیست' })
+  @IsPhoneNumber('IR')
   phone: string;
 
-  @IsNotEmpty()
   @IsString()
-  @Length(4, 6, { message: 'کد معتبر نیست' })
+  @Length(6, 6)
   code: string;
 }

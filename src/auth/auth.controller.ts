@@ -14,6 +14,7 @@ export class AuthController {
   @Post('/verify-otp')
   verifyOtp(@Body() body: VerifyOtpDto) {
     const { phone, code } = body;
-    this.authService.verifyOtp(phone, code);
+    // console.log('fher');
+    return this.authService.verifyOtp(phone, code);
   }
 }

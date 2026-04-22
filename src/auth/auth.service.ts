@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomInt } from 'crypto';
@@ -10,7 +14,6 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   otps = new Map();
   constructor(
-    @InjectRepository(User)
     private userService: UserService,
     private jwt: JwtService,
   ) {}
@@ -35,11 +38,12 @@ export class AuthService {
   }
   async verifyOtp(phone: string, code: string) {
     const data = this.otps.get(phone);
+    console.log('data: ', data);
     if (!data) return { success: false, message: 'OTP not found' };
     if (data.expireAt < Date.now())
       return { success: false, message: 'OTP expired' };
     if (data.code !== code) return { success: false, message: 'Invalid code' };
-
+    console.log(this.userService, ' fdska;fdsl;k');
     let user = await this.userService.findByPhone(phone);
     if (!user) {
       user = await this.userService.create(phone);
@@ -61,7 +65,7 @@ export class AuthService {
     });
 
     user.refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-    
+
     await this.userService.save(user);
 
     return {

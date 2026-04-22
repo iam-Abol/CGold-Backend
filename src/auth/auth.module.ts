@@ -9,7 +9,9 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   imports: [
     UserModule,
-    JwtModule.register({}),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+    }),
     TypeOrmModule.forFeature([User]),
   ],
   providers: [AuthService],
