@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { UserRole } from './user-role.enum';
 
 @Entity()
 export class User {
@@ -7,6 +8,9 @@ export class User {
 
   @Column({ unique: true })
   phone: string;
+
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
+  role: UserRole;
 
   @Column({ nullable: true })
   refreshTokenHash: string;
