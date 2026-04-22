@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomInt } from 'crypto';
@@ -36,16 +36,17 @@ export class AuthService {
   async verifyOtp(phone: string, code: string) {
     const data = this.otps.get(phone);
     if (!data) return { success: false, message: 'OTP not found' };
-    if (data.expires < Date.now())
+    if (data.expireAt < Date.now())
       return { success: false, message: 'OTP expired' };
     if (data.code !== code) return { success: false, message: 'Invalid code' };
-    // TODO: database -> create or update user
+
     let user = await this.userService.findByPhone(phone);
     if (!user) {
       user = await this.userService.create(phone);
     }
-    // TODO: jwt
-    return { success: true, token: 'jwt' };
+    const tokens = await this.generateTokens(user);
+
+    return { success: true, tokens };
   }
 
   async generateTokens(user: User) {
@@ -60,12 +61,23 @@ export class AuthService {
     });
 
     user.refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-
+    
     await this.userService.save(user);
 
     return {
       accessToken,
       refreshToken,
     };
+  }
+  async refresh(userId: string, refreshToken: string) {
+    const user = await this.userService.findOne({
+      where: { id: Number(userId) },
+    });
+    if (!user || !user.refreshTokenHash) throw new UnauthorizedException();
+    const isMatch = await bcrypt.compare(refreshToken, user.refreshTokenHash);
+
+    if (!isMatch) throw new UnauthorizedException();
+
+    return this.generateTokens(user);
   }
 }
