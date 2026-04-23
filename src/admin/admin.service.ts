@@ -7,7 +7,7 @@ export class AdminService {
   constructor(private usersService: UserService) {}
 
   async updateUserRole(userId: string, role: UserRole) {
-    console.log('herearefasd');
+    // console.log('herearefasd');
     return this.usersService.updateRole(userId, role);
   }
 }
