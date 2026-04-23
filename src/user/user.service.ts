@@ -13,7 +13,14 @@ export class UserService {
   async findByPhone(phone: string) {
     return this.repo.findOne({ where: { phone } });
   }
-
+  async findById(id: string) {
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    const record = await this.repo.findOneBy({ id: numericId });
+    return record;
+  }
   async create(phone: string) {
     const user = this.repo.create({ phone });
     return this.repo.save(user);
