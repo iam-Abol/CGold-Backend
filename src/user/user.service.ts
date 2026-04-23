@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { UserRole } from 'src/enums/user-role.enum';
@@ -42,5 +42,12 @@ export class UserService {
     user.role = UserRole.ADMIN;
 
     await this.repo.save(user);
+  }
+
+  async updateRole(id: string, newRole: UserRole) {
+    const user = await this.findById(id);
+    if (!user) throw new NotFoundException('User not found');
+    user.role = newRole;
+    return this.save(user);
   }
 }
