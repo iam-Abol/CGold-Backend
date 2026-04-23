@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { UserRole } from 'src/enums/user-role.enum';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, In, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -49,5 +49,9 @@ export class UserService {
     if (!user) throw new NotFoundException('User not found');
     user.role = newRole;
     return this.save(user);
+  }
+
+  findByIds(ids: number[]) {
+    return this.repo.findBy({ id: In(ids) });
   }
 }
