@@ -14,7 +14,4 @@ export class CreateProductDto {
 
   @IsNumber()
   price: number;
-
-  @IsArray()
-  brokerIds: string[];
 }
