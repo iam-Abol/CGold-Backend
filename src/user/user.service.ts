@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
+import { UserRole } from 'src/enums/user-role.enum';
 import { FindOneOptions, Repository } from 'typeorm';
 
 @Injectable()
@@ -24,5 +25,15 @@ export class UserService {
 
   async findOne(options: FindOneOptions<User>) {
     return this.repo.findOne(options);
+  }
+
+  async createFirstAdmin(phone: string) {
+    let user = await this.findByPhone(phone);
+
+    if (!user) user = await this.create(phone);
+
+    user.role = UserRole.ADMIN;
+
+    await this.repo.save(user);
   }
 }
