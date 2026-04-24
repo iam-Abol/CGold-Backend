@@ -26,4 +26,7 @@ export class ProductService {
       relations: ['brokers'],
     });
   }
+  async delete(id: string) {
+    return this.productRepo.delete(id);
+  }
 }
