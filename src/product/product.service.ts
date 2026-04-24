@@ -20,4 +20,10 @@ export class ProductService {
   findAll() {
     return this.productRepo.find({ relations: ['brokers'] });
   }
+  findOne(id: string) {
+    return this.productRepo.findOne({
+      where: { id },
+      relations: ['brokers'],
+    });
+  }
 }
