@@ -3,6 +3,7 @@ import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from './dtos/createProduct.dto';
+import { UpdateProductDto } from './dtos/updateProduct.dto';
 
 @Injectable()
 export class ProductService {
@@ -25,6 +26,10 @@ export class ProductService {
       where: { id },
       relations: ['brokers'],
     });
+  }
+  async update(id: string, dto: UpdateProductDto) {
+    const product = await this.findOne(id);
+    if (!product) throw new NotFoundException();
   }
   async delete(id: string) {
     return this.productRepo.delete(id);

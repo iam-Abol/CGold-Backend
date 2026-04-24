@@ -9,7 +9,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+
   const userService = app.get(UserService);
 
   await userService.createFirstAdmin(process.env.ADMIN_PHONE || '09221024578');
