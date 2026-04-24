@@ -12,6 +12,7 @@ async function bootstrap() {
   const userService = app.get(UserService);
 
   await userService.createFirstAdmin(process.env.ADMIN_PHONE || '09221024578');
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
