@@ -10,11 +10,14 @@ export class ProductService {
     @InjectRepository(Product)
     private productRepo: Repository<Product>,
   ) {}
-  async create(dto: CreateProductDto) {
+  create(dto: CreateProductDto) {
     const product = this.productRepo.create({
       ...dto,
     });
 
     return this.productRepo.save(product);
+  }
+  findAll() {
+    return this.productRepo.find({ relations: ['brokers'] });
   }
 }
