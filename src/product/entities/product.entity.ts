@@ -37,7 +37,7 @@ export class Product {
   })
   price: number;
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, (user) => user.products)
   @JoinTable()
   brokers: User[];
 

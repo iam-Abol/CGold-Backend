@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
 import { UserRole } from '../enums/user-role.enum';
+import { Product } from 'src/product/entities/product.entity';
 
 @Entity()
 export class User {
@@ -14,4 +15,7 @@ export class User {
 
   @Column({ nullable: true })
   refreshTokenHash: string;
+
+  @ManyToMany(() => Product, (product) => product.brokers)
+  products: Product[];
 }
