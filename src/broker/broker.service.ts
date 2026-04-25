@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class BrokerService {}
+export class BrokerService {
+  getProductsForBroker(brokerId: string) {}
+}
