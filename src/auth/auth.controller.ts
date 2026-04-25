@@ -5,6 +5,7 @@ import { SendOtpDto } from './dtos/sendOtp.dto';
 import { RefreshTokenDto } from './dtos/refresh.dto';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { VerifyOtpResponseDto } from './dtos/verifyOtpResponse.dto';
+import { TokensResponseDto } from './dtos/tokenReponse.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -41,6 +42,15 @@ export class AuthController {
   @ApiBody({
     type: RefreshTokenDto,
     description: 'User ID and refresh token',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid or expired refresh token',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns new access and refresh tokens',
+    type: TokensResponseDto,
   })
   refresh(@Body() { token, userId }: RefreshTokenDto) {
     return this.authService.refresh(userId, token);
