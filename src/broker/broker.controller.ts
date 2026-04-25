@@ -18,15 +18,8 @@ import { User } from 'src/entities/user.entity';
 @Roles(UserRole.BROKER, UserRole.ADMIN)
 export class BrokerController {
   constructor(private brokerService: BrokerService) {}
-  @Get(':brokerId/products')
-  getProducts(@Param('brokerId') brokerId: string, @Req() req: any) {
-    const loggedInBrokerId = req.user.id;
-    console.log(loggedInBrokerId, req.user);
-    if (Number(brokerId) !== loggedInBrokerId) {
-      throw new ForbiddenException(
-        'You are not allowed to access this resource',
-      );
-    }
-    return this.brokerService.getProductsForBroker(brokerId);
+  @Get('products')
+  getProducts(@Req() req: any) {
+    return this.brokerService.getProductsForBroker(req.user.id);
   }
 }
