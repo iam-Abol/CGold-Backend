@@ -29,6 +29,9 @@ export class ProductService {
       relations: ['brokers'],
     });
   }
+  getProduct() {
+    return this.productRepo.find({});
+  }
   async update(id: string, dto: UpdateProductDto) {
     const { brokerIds, ...updateData } = dto;
 
