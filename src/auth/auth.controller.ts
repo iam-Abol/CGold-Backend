@@ -4,6 +4,7 @@ import { VerifyOtpDto } from './dtos/verifyOtp.dto';
 import { SendOtpDto } from './dtos/sendOtp.dto';
 import { RefreshTokenDto } from './dtos/refresh.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { VerifyOtpResponseDto } from './dtos/verifyOtpResponse.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,11 +17,23 @@ export class AuthController {
     return this.authService.sendOtp(phone);
   }
   @Post('/verify-otp')
+  @ApiOperation({ summary: 'Verify OTP code and login/register user' })
+  @ApiResponse({
+    status: 200,
+    description: 'OTP verified successfully',
+    type: VerifyOtpResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid code or expired OTP',
+  })
   verifyOtp(@Body() body: VerifyOtpDto) {
     const { phone, code } = body;
     // console.log('fher');
     return this.authService.verifyOtp(phone, code);
   }
+
+  
   @Post('refresh')
   refresh(@Body() { token, userId }: RefreshTokenDto) {
     return this.authService.refresh(userId, token);
