@@ -54,4 +54,12 @@ export class UserService {
   findByIds(ids: number[]) {
     return this.repo.findBy({ id: In(ids) });
   }
+  async setActiveStatus(id: string, status: boolean) {
+    const user = await this.findById(id);
+    if (!user) throw new NotFoundException('User not found');
+
+    user.isActive = status;
+
+    return this.repo.save(user);
+  }
 }

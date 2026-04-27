@@ -18,4 +18,7 @@ export class User {
 
   @ManyToMany(() => Product, (product) => product.brokers)
   products: Product[];
+
+  @Column({ default: true })
+  isActive: boolean;
 }
