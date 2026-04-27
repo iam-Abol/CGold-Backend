@@ -4,6 +4,8 @@ import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { Trade } from './entities/trade.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateTradeDto } from './dtos/createTrade.dto';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class TradeService {
@@ -15,5 +17,8 @@ export class TradeService {
 
     private userService: UserService,
   ) {}
-  
+  private pickRandomBroker(brokers: User[]): User {
+    const randomIndex = Math.floor(Math.random() * brokers.length);
+    return brokers[randomIndex];
+  }
 }
