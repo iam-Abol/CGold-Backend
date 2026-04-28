@@ -34,15 +34,18 @@ export class TradeService {
     if (!user) throw new NotFoundException('User not found');
 
     const product = await this.productService.findOne(productId);
+
     if (!product) throw new NotFoundException('Product not found');
 
     if (!product.brokers || product.brokers.length === 0) {
       throw new BadRequestException('No broker assigned to this product');
     }
 
-    const validBrokers = product.brokers.filter(
-      (b) => b.role === UserRole.BROKER && b.isActive,
-    );
+    const validBrokers = product.brokers.filter((b) => {
+      return (
+        (b.role === UserRole.BROKER || b.role === UserRole.ADMIN) && b.isActive
+      );
+    });
 
     if (validBrokers.length === 0) {
       throw new BadRequestException(
@@ -58,7 +61,7 @@ export class TradeService {
       product,
       quantity,
     });
-
+    // ToDo interceptor with dto
     return this.tradeRepo.save(trade);
   }
 }
