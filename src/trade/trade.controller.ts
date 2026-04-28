@@ -2,6 +2,9 @@ import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { TradeService } from './trade.service';
 import { CreateTradeDto } from './dtos/createTrade.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UserRole } from 'src/enums/user-role.enum';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('trade')
 @UseGuards(JwtAuthGuard)
@@ -17,5 +20,11 @@ export class TradeController {
   @Get('my')
   async getMyTrades(@Req() req: any) {
     return this.tradeService.findAllByUser(String(req.user.id));
+  }
+  @Get('broker')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.BROKER)
+  async getBrokerTrades(@Req() req) {
+    return this.tradeService.findAllByBroker(String(req.user.id));
   }
 }
