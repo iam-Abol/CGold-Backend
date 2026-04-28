@@ -78,4 +78,17 @@ export class TradeService {
       order: { createdAt: 'DESC' },
     });
   }
+  async findAllByBroker(brokerId: string) {
+    const numericId = Number(brokerId);
+
+    if (isNaN(numericId)) {
+      throw new BadRequestException('Invalid broker ID');
+    }
+
+    return this.tradeRepo.find({
+      where: { broker: { id: numericId } },
+      relations: ['user', 'product'],
+      order: { createdAt: 'DESC' },
+    });
+  }
 }
