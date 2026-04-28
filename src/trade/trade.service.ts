@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTradeDto } from './dtos/createTrade.dto';
 import { User } from 'src/entities/user.entity';
 import { UserRole } from 'src/enums/user-role.enum';
+import { TradeStatus } from './enums/tradeStatus.enum';
 
 @Injectable()
 export class TradeService {
@@ -90,5 +92,39 @@ export class TradeService {
       relations: ['user', 'product'],
       order: { createdAt: 'DESC' },
     });
+  }
+
+  async updateStatus(tradeId: string, brokerId: number, status: TradeStatus) {
+    const trade = await this.tradeRepo.findOne({
+      where: { id: tradeId },
+      relations: ['broker'],
+    });
+
+    if (!trade) throw new NotFoundException('Trade not found');
+
+    if (trade.expireAt && trade.expireAt.getTime() < Date.now()) {
+      throw new BadRequestException('The trade has expired');
+    }
+    if (trade.broker.id !== brokerId) {
+      throw new ForbiddenException(
+        'You are not the assigned broker for this trade',
+      );
+    }
+
+    if (trade.status !== TradeStatus.PENDING)
+      throw new BadRequestException('The trade has already been updated');
+
+    const validStatuses = [TradeStatus.APPROVED, TradeStatus.REJECTED];
+
+    if (!validStatuses.includes(status)) {
+      throw new BadRequestException('Invalid status value');
+    }
+    trade.status = status;
+    await this.tradeRepo.save(trade);
+
+    return {
+      message: `Trade status updated successfully to ${status}`,
+      trade,
+    };
   }
 }
