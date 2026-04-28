@@ -14,6 +14,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from 'src/enums/user-role.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { UpdateTradeStatusDto } from './dtos/updateTradeStatus.dto';
 
 @Controller('trade')
 @UseGuards(JwtAuthGuard)
@@ -37,5 +38,15 @@ export class TradeController {
     return this.tradeService.findAllByBroker(String(req.user.id));
   }
 
- 
+  @Patch(':id/status')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.BROKER)
+  async updateTradeStatus(
+    @Param('id') tradeId: string,
+    @Body() dto: UpdateTradeStatusDto,
+    @Req() req,
+  ) {
+    const brokerId = req.user.id;
+    return this.tradeService.updateStatus(tradeId, brokerId, dto.status);
+  }
 }
