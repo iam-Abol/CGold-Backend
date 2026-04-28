@@ -12,6 +12,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UserRole } from 'src/enums/user-role.enum';
 import { UserService } from './user.service';
+import { SetActiveDto } from './dtos/setActive.dto';
 
 @Controller('user')
 export class UserController {
@@ -34,7 +35,7 @@ export class UserController {
   @Patch('/active')
   @Roles(UserRole.BROKER, UserRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  setActive(@Req() req: any, @Body('isActive') isActive: boolean) {
-    return this.userService.setActiveStatus(req.user.id, isActive);
+  setActive(@Req() req: any, @Body() body: SetActiveDto) {
+    return this.userService.setActiveStatus(req.user.id, body.isActive);
   }
 }
