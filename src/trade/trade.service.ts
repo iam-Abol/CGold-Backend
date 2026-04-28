@@ -41,11 +41,13 @@ export class TradeService {
     }
 
     const validBrokers = product.brokers.filter(
-      (b) => b.role === UserRole.BROKER,
+      (b) => b.role === UserRole.BROKER && b.isActive,
     );
 
     if (validBrokers.length === 0) {
-      throw new BadRequestException('No valid broker found for this product');
+      throw new BadRequestException(
+        'No active broker available for this product',
+      );
     }
 
     const selectedBroker = this.pickRandomBroker(validBrokers);
