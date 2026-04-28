@@ -64,4 +64,18 @@ export class TradeService {
     // ToDo interceptor with dto
     return this.tradeRepo.save(trade);
   }
+
+  async findAllByUser(userId: string) {
+    const numericId = Number(userId);
+
+    if (isNaN(numericId)) {
+      throw new BadRequestException('Invalid user ID');
+    }
+
+    return this.tradeRepo.find({
+      where: { user: { id: numericId } },
+      relations: ['product'],
+      order: { createdAt: 'DESC' },
+    });
+  }
 }
