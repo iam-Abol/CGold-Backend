@@ -1,4 +1,17 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { TradeService } from './trade.service';
+import { CreateTradeDto } from './dtos/createTrade.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('trade')
-export class TradeController {}
+@UseGuards(JwtAuthGuard)
+export class TradeController {
+  constructor(private readonly tradeService: TradeService) {}
+
+  @Post()
+  async create(@Req() req: any, @Body() dto: CreateTradeDto) {
+    // console);
+
+    return this.tradeService.createTrade(String(req.user.id), dto);
+  }
+}
