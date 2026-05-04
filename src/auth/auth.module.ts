@@ -6,12 +6,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { UserModule } from 'src/user/user.module';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RedisModule } from 'src/redis/redis.module';
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
     JwtModule.register({}),
     TypeOrmModule.forFeature([User]),
+    RedisModule,
   ],
   providers: [AuthService, JwtAuthGuard],
   controllers: [AuthController],
