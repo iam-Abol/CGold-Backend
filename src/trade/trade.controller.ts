@@ -15,6 +15,8 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from 'src/enums/user-role.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UpdateTradeStatusDto } from './dtos/updateTradeStatus.dto';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { tradeResponseDto } from 'src/responseDtos/tradeResponse.dto';
 
 @Controller('trade')
 @UseGuards(JwtAuthGuard)
@@ -22,6 +24,7 @@ export class TradeController {
   constructor(private readonly tradeService: TradeService) {}
 
   @Post()
+  @Serialize(tradeResponseDto)
   async create(@Req() req: any, @Body() dto: CreateTradeDto) {
     // console);
 
