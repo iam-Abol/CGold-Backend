@@ -10,6 +10,7 @@ import { BrokerModule } from './broker/broker.module';
 import { CustomerModule } from './customer/customer.module';
 import { TradeModule } from './trade/trade.module';
 import { RedisModule } from './redis/redis.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { RedisModule } from './redis/redis.module';
     CustomerModule,
     TradeModule,
     RedisModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
