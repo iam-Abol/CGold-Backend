@@ -1,5 +1,7 @@
 import { TradeStatus } from 'src/trade/enums/tradeStatus.enum';
-import { Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne} from 'typeorm';
+import { User } from './user.entity';
+import { Trade } from 'src/trade/entities/trade.entity';
 
 
 @Entity()
@@ -7,21 +9,21 @@ export class tradeLog{
     @PrimaryGeneratedColumn()
     id :number;
 
-    @Column()
-    userId: number;
+    @ManyToOne(() => User)
+    userId: User;
 
-    @Column()
-    brokerId: number;
+    @ManyToOne(() => User)
+    brokerId: User;
 
-    @Column()
-    tradeId: number;
+    @ManyToOne(() => Trade)
+    tradeId: Trade;
 
     @Column({type: "enum", enum : TradeStatus})
-    tradeFinalState: TradeStatus;
-
-    @Column()
-    createdAt: string;
+    tradeFinalStatus: TradeStatus;
 
     @Column()
     tradeTimeStamp: string;
+
+    @CreateDateColumn()
+    createdAt: Date;
 }
