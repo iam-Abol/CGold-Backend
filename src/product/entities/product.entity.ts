@@ -19,6 +19,13 @@ export class Product {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  code: string;
+
+  @Column('decimal', { precision: 12, scale: 3, default: 0 })
+  weight: number;
+  @Column('decimal', { precision: 5, scale: 3, default: 0 })
+  purity: number;
   @Column({
     type: 'enum',
     enum: MetalType,
@@ -31,11 +38,14 @@ export class Product {
   })
   pricingType: PricingType;
 
-  @Column('decimal', {
-    precision: 15,
-    scale: 3,
-  })
-  price: number;
+  @Column('decimal', { precision: 20, scale: 2, default: 0 })
+  marketPrice: number;
+
+  @Column('decimal', { precision: 20, scale: 2, default: 0 })
+  buyPrice: number;
+
+  @Column('decimal', { precision: 20, scale: 2, default: 0 })
+  sellPrice: number;
 
   @ManyToMany(() => User, (user) => user.products)
   @JoinTable()
