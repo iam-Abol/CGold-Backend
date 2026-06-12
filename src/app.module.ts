@@ -10,6 +10,7 @@ import { BrokerModule } from './broker/broker.module';
 import { CustomerModule } from './customer/customer.module';
 import { TradeModule } from './trade/trade.module';
 import { MarketModule } from './market/market.module';
+import { PriceProviderService } from './market/price-provider.service';
 
 @Module({
   imports: [
@@ -33,6 +34,6 @@ import { MarketModule } from './market/market.module';
     MarketModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PriceProviderService],
 })
 export class AppModule {}
