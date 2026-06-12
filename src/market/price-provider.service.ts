@@ -14,14 +14,18 @@ export class PriceProviderService {
 
     return data.price;
   }
-  async getUsdToToman() {
+  async getRate(from = 'USD', to = 'IRR') {
     const API_KEY = process.env.EXCHANGERATE_API_KEY;
 
     const { data } = await axios.get(
-      `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`,
+      `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${from}`,
     );
 
-    const irr = data.conversion_rates.IRR;
+    return data.conversion_rates[to];
+  }
+
+  async getUsdToToman() {
+    const irr = await this.getRate('USD', 'IRR');
     return irr / 10;
   }
 }

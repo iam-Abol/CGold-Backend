@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 export class PriceSchedulerService {
   constructor(private readonly provider: PriceProviderService) {}
 
-  @Cron('*/300 * * * * *')
+  @Cron('*/3 * * * * *')
   async updatePrices() {
     const goldOuncePrice = await this.provider.getGoldPrice();
     const silverOuncePrice = await this.provider.getSilverPrice();
