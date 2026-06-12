@@ -9,6 +9,7 @@ import { ProductModule } from './product/product.module';
 import { BrokerModule } from './broker/broker.module';
 import { CustomerModule } from './customer/customer.module';
 import { TradeModule } from './trade/trade.module';
+import { MarketModule } from './market/market.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TradeModule } from './trade/trade.module';
     BrokerModule,
     CustomerModule,
     TradeModule,
+    MarketModule,
   ],
   controllers: [AppController],
   providers: [AppService],
