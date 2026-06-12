@@ -20,19 +20,42 @@ export class PriceSchedulerService {
     const silverOuncePrice = await this.provider.getSilverPrice();
     const usdToToman = await this.provider.getUsdToToman();
 
-    // todo: update db
     console.log(
       'updating prices: ',
       `Gold : ${goldOuncePrice} silver : ${silverOuncePrice} useToToman : ${usdToToman}`,
     );
-    // await this.updateProducts(goldOuncePrice, silverOuncePrice, usdToToman);
+    await this.updateProducts(goldOuncePrice, silverOuncePrice, usdToToman);
   }
 
-  private updateProducts(
+  private async updateProducts(
     goldOuncePrice: number,
     silverOuncePrice: number,
     usdToToman: number,
-  ) {}
+  ) {
+    const products = await this.productRepo.find();
+
+    const goldPerGramUSD = goldOuncePrice / 31.1034768;
+    const silverPerGramUSD = silverOuncePrice / 31.1034768;
+
+    for (const product of products) {
+      const marketPrice = this.calculatePrice(
+        product,
+        goldPerGramUSD,
+        silverPerGramUSD,
+        usdToToman,
+      );
+
+      product.marketPrice = Number(marketPrice.toFixed(0));
+
+      //sample spread
+      product.buyPrice = Number((marketPrice * 0.95).toFixed(0));
+      product.sellPrice = Number((marketPrice * 1.05).toFixed(0));
+    }
+
+    await this.productRepo.save(products);
+
+    console.log(`Updated ${products.length} products`);
+  }
   private calculatePrice(
     product: Product,
     goldPerGramUSD: number,
