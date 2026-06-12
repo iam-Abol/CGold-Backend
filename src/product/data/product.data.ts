@@ -1,7 +1,8 @@
+import { Product } from '../entities/product.entity';
 import { MetalType } from '../enums/metalType.enum';
 import { PricingType } from '../enums/pricingType.enum';
 
-export const products = [
+export const products: Partial<Product>[] = [
   {
     code: 'gold18',
     name: 'یک گرم طلای 18 عیار',
