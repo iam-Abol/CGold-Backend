@@ -7,6 +7,15 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  name: string;
+
+  @Column()
+  lastName: string;
+
+  @Column()
+  email: string;
+
   @Column({ unique: true })
   phone: string;
 
@@ -21,4 +30,7 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ default: false })
+  isProfileComplete: boolean;
 }

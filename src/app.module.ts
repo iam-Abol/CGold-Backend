@@ -11,6 +11,8 @@ import { CustomerModule } from './customer/customer.module';
 import { TradeModule } from './trade/trade.module';
 import { MarketModule } from './market/market.module';
 import { PriceProviderService } from './market/price-provider.service';
+import { RedisModule } from './redis/redis.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { PriceProviderService } from './market/price-provider.service';
     CustomerModule,
     TradeModule,
     MarketModule,
+    RedisModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService, PriceProviderService],
