@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class IsProfileComplete implements CanActivate {
@@ -9,7 +9,7 @@ export class IsProfileComplete implements CanActivate {
     const user = request.user;
 
     if (!user) {
-          throw new ForbiddenException('User not found');
+          throw new NotFoundException('User not found');
         }
 
     if (!user.isProfileComplete){

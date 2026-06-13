@@ -11,9 +11,11 @@ export class UserService {
     @InjectRepository(User)
     private repo: Repository<User>,
   ) {}
+  
   async findByPhone(phone: string) {
     return this.repo.findOne({ where: { phone } });
   }
+
   async findById(id: string) {
     const numericId = Number(id);
     if (isNaN(numericId)) {
@@ -22,6 +24,7 @@ export class UserService {
     const record = await this.repo.findOneBy({ id: numericId });
     return record;
   }
+
   async create(phone: string) {
     const user = this.repo.create({ phone });
     return this.repo.save(user);
@@ -55,6 +58,7 @@ export class UserService {
   findByIds(ids: number[]) {
     return this.repo.findBy({ id: In(ids) });
   }
+
   async setActiveStatus(id: string, status: boolean) {
     const user = await this.findById(id);
     if (!user) throw new NotFoundException('User not found');
@@ -64,7 +68,14 @@ export class UserService {
     return this.repo.save(user);
   }
 
-  async completeProfile(dto: CompleteProfileDto){
-    
+  async completeProfile(id: string, dto: CompleteProfileDto){
+    const user = await this.findById(id);
+    if (!user) throw new NotFoundException('User not found');
+
+    Object.assign(user, dto);
+
+    user.isProfileComplete = true;
+
+    return await this.repo.save(user);
   }
 }

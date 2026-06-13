@@ -4,7 +4,7 @@ export class CompleteProfileDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(2)
+  @MinLength(3)
   name: string;
 
   @IsNotEmpty()
