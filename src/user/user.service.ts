@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { UserRole } from 'src/enums/user-role.enum';
 import { FindOneOptions, In, Repository } from 'typeorm';
+import { CompleteProfileDto } from './dtos/completeProfile.dto';
 
 @Injectable()
 export class UserService {
@@ -61,5 +62,9 @@ export class UserService {
     user.isActive = status;
 
     return this.repo.save(user);
+  }
+
+  async completeProfile(dto: CompleteProfileDto){
+    
   }
 }
