@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TradeStatus } from '../enums/tradeStatus.enum';
+import { PaymentType } from '../enums/paymentType.enum';
 
 @Entity()
 export class Trade {
@@ -34,8 +35,15 @@ export class Trade {
   })
   status: TradeStatus;
 
+  @Column({
+    type: 'enum',
+    enum: PaymentType,
+  })
+  paymentType: PaymentType;
+
   @CreateDateColumn()
   createdAt: Date;
+
   @Column()
   expireAt: Date;
 
