@@ -13,6 +13,7 @@ import { CreateTradeDto } from './dtos/createTrade.dto';
 import { User } from 'src/entities/user.entity';
 import { UserRole } from 'src/enums/user-role.enum';
 import { TradeStatus } from './enums/tradeStatus.enum';
+import axios from 'axios';
 
 @Injectable()
 export class TradeService {
@@ -126,5 +127,20 @@ export class TradeService {
       message: `Trade status updated successfully to ${status}`,
       trade,
     };
+  }
+
+  async createPaymentRequest(finallPrice: number){
+    const bankData = {
+        amount: finallPrice * 10,
+        description: "توضیحات سفارش",
+        merchant_id: "",
+        callback_url: "",
+
+    }
+
+    const response = await axios.post("https://sandbox.zarinpal.com/pg/v4/payment/request.json",
+        bankData)
+    
+    return response?.data?.data;
   }
 }
