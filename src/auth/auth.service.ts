@@ -62,7 +62,17 @@ export class AuthService {
     }
     const tokens = await this.generateTokens(user);
     // console.log(user);
-    return { success: true, tokens };
+
+    return {
+      success: true,
+      tokens,
+      user: {
+        id: user.id,
+        phone: user.phone,
+        role: user.role,
+        isProfileComplete: true,
+      },
+    };
   }
 
   async generateTokens(user: User) {
