@@ -13,6 +13,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UserRole } from 'src/enums/user-role.enum';
 import { UserService } from './user.service';
 import { SetActiveDto } from './dtos/setActive.dto';
+import { CompleteProfileDto } from './dtos/completeProfile.dto';
 
 @Controller('user')
 export class UserController {
@@ -30,6 +31,13 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   userRoute() {
     return 'Welcome User!';
+  }
+
+  @Patch('/profile')
+  @UseGuards(JwtAuthGuard)
+  completeProfile(@Req() req: any, @Body() body: CompleteProfileDto) {
+    console.log('udpateing profile');
+    return this.userService.completeProfile(req.user.id, body);
   }
 
   @Patch('/active')
