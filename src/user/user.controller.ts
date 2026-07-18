@@ -32,6 +32,13 @@ export class UserController {
     return 'Welcome User!';
   }
 
+  @Get('index')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  getAllUser() {
+    return this.userService.getAll();
+  }
+
   @Patch('/active')
   @Roles(UserRole.BROKER, UserRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -13,6 +13,9 @@ export class UserService {
   async findByPhone(phone: string) {
     return this.repo.findOne({ where: { phone } });
   }
+  async getAll() {
+    return this.repo.find({});
+  }
   async findById(id: string) {
     const numericId = Number(id);
     if (isNaN(numericId)) {
