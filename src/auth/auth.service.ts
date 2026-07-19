@@ -10,7 +10,7 @@ import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class AuthService {
-  // otps = new Map();
+  otps = new Map();
   constructor(
     private userService: UserService,
     private jwt: JwtService,
@@ -19,14 +19,14 @@ export class AuthService {
   async sendOtp(phone: string) {
     const code = this.generateOtp();
 
-    const redis = this.redis.getClient();
+    // const redis = this.redis.getClient();
 
-    await redis.set(`otp:${phone}`, code, 'EX', 120);
+    // await redis.set(`otp:${phone}`, code, 'EX', 120);
 
-    // this.otps.set(phone, {
-    //   code,
-    //   expireAt: Date.now() + 1000 * 2 * 60, //2m
-    // });
+    this.otps.set(phone, {
+      code,
+      expireAt: Date.now() + 1000 * 2 * 60, //2m
+    });
     await this.sendSms(phone, code);
     return { success: true };
   }
@@ -56,14 +56,14 @@ export class AuthService {
     console.log('SMS to', phone, 'OTP:', code);
   }
   async verifyOtp(phone: string, code: string) {
-    const redis = this.redis.getClient();
-    const data = await redis.get(`otp:${phone}`);
+    // const redis = this.redis.getClient();
+    // const data = await redis.get(`otp:${phone}`);
 
-    // const data = this.otps.get(phone);
-    // console.log('data: ', data);
+    const data = this.otps.get(phone);
+    console.log('data: ', data);
     if (!data) return { success: false, message: 'OTP not found Or Expired' };
-    // if (data.expireAt < Date.now())
-    //   return { success: false, message: 'OTP expired' };
+    if (data.expireAt < Date.now())
+      return { success: false, message: 'OTP expired' };
     if (data !== code) return { success: false, message: 'Invalid code' };
 
     let user = await this.userService.findByPhone(phone);

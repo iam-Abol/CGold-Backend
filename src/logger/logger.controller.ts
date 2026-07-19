@@ -7,13 +7,12 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('logger')
 export class LoggerController {
-
   constructor(private loggerService: LoggerService) {}
-  
+
   @Get()
   @UseGuards(RolesGuard, IsProfileComplete)
-      completeProfile(@Req() req: any, @Body() body: TradeQueryDto) {
-        console.log('finding trades');
-        return this.loggerService.findTrades(body);
-      }
+  completeProfile(@Req() req: any, @Body() body: TradeQueryDto) {
+    console.log('finding trades');
+    // return this.loggerService.findTrades(body);
+  }
 }

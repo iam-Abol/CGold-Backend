@@ -7,16 +7,16 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastName: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column({ unique: true })
+  @Column({ nullable: true })
   phone: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
@@ -34,6 +34,6 @@ export class User {
   @Column({ default: false })
   isProfileComplete: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   nationalCardImage: string;
 }
