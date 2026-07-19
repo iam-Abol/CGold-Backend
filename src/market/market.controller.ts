@@ -1,4 +1,4 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { MarketService } from './market.service';
 
 @Controller('market')
@@ -8,5 +8,9 @@ export class MarketController {
   @Post('seed')
   async seed() {
     return this.marketService.seed();
+  }
+  @Get()
+  async getAll() {
+    return this.marketService.getAll();
   }
 }

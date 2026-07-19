@@ -13,4 +13,7 @@ export class MarketService {
   async seed() {
     return this.productRepo.save(products);
   }
+  async getAll() {
+    return this.productRepo.find({});
+  }
 }

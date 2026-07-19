@@ -11,9 +11,12 @@ export class UserService {
     @InjectRepository(User)
     private repo: Repository<User>,
   ) {}
-  
+
   async findByPhone(phone: string) {
     return this.repo.findOne({ where: { phone } });
+  }
+  async getAll() {
+    return this.repo.find({});
   }
 
   async findById(id: string) {
@@ -68,7 +71,7 @@ export class UserService {
     return this.repo.save(user);
   }
 
-  async completeProfile(id: string, dto: CompleteProfileDto){
+  async completeProfile(id: string, dto: CompleteProfileDto) {
     const user = await this.findById(id);
     if (!user) throw new NotFoundException('User not found');
 
@@ -79,24 +82,19 @@ export class UserService {
     return await this.repo.save(user);
   }
 
-  async uploadImage(
-    userId: string,
-    file: Express.Multer.File,
-  ) {
+  async uploadImage(userId: string, file: Express.Multer.File) {
     const user = await this.findById(userId);
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    
+
     user.nationalCardImage = file.filename;
-  
+
     await this.repo.save(user);
-  
+
     return {
       image: file.filename,
     };
   }
 }
-
-

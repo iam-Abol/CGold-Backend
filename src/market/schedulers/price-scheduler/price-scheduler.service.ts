@@ -14,7 +14,7 @@ export class PriceSchedulerService {
     private readonly productRepo: Repository<Product>,
   ) {}
 
-  @Cron('*/300 * * * * *')
+  @Cron('0 */10 * * * *')
   async updatePrices() {
     const goldOuncePrice = await this.provider.getGoldPrice();
     const silverOuncePrice = await this.provider.getSilverPrice();

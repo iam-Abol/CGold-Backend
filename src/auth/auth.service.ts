@@ -64,7 +64,7 @@ export class AuthService {
     if (!data) return { success: false, message: 'OTP not found Or Expired' };
     if (data.expireAt < Date.now())
       return { success: false, message: 'OTP expired' };
-    if (data !== code) return { success: false, message: 'Invalid code' };
+    if (data.code !== code) return { success: false, message: 'Invalid code' };
 
     let user = await this.userService.findByPhone(phone);
     if (!user) {
@@ -79,7 +79,7 @@ export class AuthService {
         id: user.id,
         phone: user.phone,
         role: user.role,
-        isProfileComplete: true,
+        isProfileComplete: false,
       },
     };
   }

@@ -24,7 +24,6 @@ import { imageStorage } from 'src/logger/common/image.config';
 import type { Response } from 'express';
 import { join } from 'path';
 
-
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -43,6 +42,12 @@ export class UserController {
     return 'Welcome User!';
   }
 
+  @Get()
+  @Roles(UserRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  getAll() {
+    return this.userService.getAll();
+  }
   @Patch('/profile')
   @UseGuards(JwtAuthGuard)
   completeProfile(@Req() req: any, @Body() body: CompleteProfileDto) {
@@ -58,36 +63,25 @@ export class UserController {
   }
 
   @Post('upload-image')
-  @UseInterceptors(FileInterceptor('image', {storage : imageStorage}))
-  upload(
-      @UploadedFile() file: Express.Multer.File,
-      @Req() req
-  ) {
-      console.log(file);
-  
-      return this.userService.uploadImage(req.user.is, file)
+  // @UseInterceptors(FileInterceptor('image', { storage: imageStorage }))
+  upload(@Req() req) {
+    return { success: true };
+    // console.log(file);
+    // console.log('fjsdaklfjdsakfj; + + ++ + ++');
+    // return this.userService.uploadImage(req.user.is, file);
   }
 
   @Get('users/:id/national-card')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  async getNationalCard(
-    @Param('id') id: string,
-    @Res() res: Response,
-  ) {
-  
+  async getNationalCard(@Param('id') id: string, @Res() res: Response) {
     const user = await this.userService.findById(id);
-    
-    if(!user){
+
+    if (!user) {
       throw new NotFoundException('User not found');
     }
-    return res.sendFile(
-      user.nationalCardImage,
-      {
-        root: join(process.cwd(), 'uploads/national-cards'),
-      },
-    );
+    return res.sendFile(user.nationalCardImage, {
+      root: join(process.cwd(), 'uploads/national-cards'),
+    });
   }
 }
-
-
