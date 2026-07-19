@@ -78,4 +78,25 @@ export class UserService {
 
     return await this.repo.save(user);
   }
+
+  async uploadImage(
+    userId: string,
+    file: Express.Multer.File,
+  ) {
+    const user = await this.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    
+    user.nationalCardImage = file.filename;
+  
+    await this.repo.save(user);
+  
+    return {
+      image: file.filename,
+    };
+  }
 }
+
+
