@@ -79,7 +79,7 @@ export class AuthService {
         id: user.id,
         phone: user.phone,
         role: user.role,
-        isProfileComplete: false,
+        isProfileComplete: user.isProfileComplete,
       },
     };
   }

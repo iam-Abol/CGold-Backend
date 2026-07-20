@@ -35,11 +35,11 @@ export class Trade {
   })
   status: TradeStatus;
 
-  @Column({
-    type: 'enum',
-    enum: PaymentType,
-  })
-  paymentType: PaymentType;
+  // @Column({
+  //   type: 'enum',
+  //   enum: PaymentType,
+  // })
+  // paymentType: PaymentType;
 
   @CreateDateColumn()
   createdAt: Date;
